@@ -50,3 +50,26 @@ for k in range(100):
     W.data += -50 * W.grad #update dei pesi
 
     print(loss.item()) #print della loss
+
+i = 0 #inizializzazione contatore 1
+ix = 0 #inizializzazione indice
+ch = [] #inizializzazione della lista dei nomi
+
+#ciclo di generazione
+while True:
+    while True:
+        xenc = f.one_hot(torch.tensor([ix]), num_classes=27).float()
+        logits = xenc @ W
+        counts = logits.exp()
+        p = counts / counts.sum(1, keepdims=True)
+        ix = torch.multinomial(p, num_samples=1, replacement=True).item()
+        if ix == 0:
+            i = i+1
+            print(ch)
+            ch = []
+            break
+        ch.append(itos[ix])
+    if i==10:
+        break
+
+#il ciclo cosi impostato genera 10 nomi
